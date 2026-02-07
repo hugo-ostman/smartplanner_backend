@@ -17,14 +17,15 @@ init([]) ->
     %% Definiera Cowboy router
     Dispatch = cowboy_router:compile([
         {'_', [
-            {"/api/schedule", schedule_handler, []}
+            {"/api/schedule", schedule_handler, []},  
+            {"/api/auth", auth_handler, []}
         ]}
     ]),
       CowboyChild = #{
         id => cowboy_http,
         start => {cowboy, start_clear, [
             http_listener,
-            [{port, 8080}],
+            [{port, 8081}],
             #{env => #{dispatch => Dispatch}}
         ]},
         restart => permanent,

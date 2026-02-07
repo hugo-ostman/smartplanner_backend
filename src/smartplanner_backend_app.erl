@@ -10,6 +10,7 @@
 -export([start/2, stop/1]).
 
 start(_StartType, _StartArgs) ->
+    smartplanner_db:init(),
     smartplanner_backend_sup:start_link().
 
 
