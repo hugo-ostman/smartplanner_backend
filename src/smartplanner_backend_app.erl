@@ -10,6 +10,8 @@
 -export([start/2, stop/1,shutdown/0]).
 
 start(_StartType, _StartArgs) ->
+    application:ensure_all_started(inets),
+    application:ensure_all_started(ssl),
     smartplanner_db:init(),
     smartplanner_backend_sup:start_link().
 

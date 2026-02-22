@@ -2,6 +2,7 @@
     id,
     mail,
     password,
+    salt,
     name
 }).
 

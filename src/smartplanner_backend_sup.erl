@@ -16,8 +16,9 @@ start_link() ->
 init([]) ->
     %% Definiera Cowboy router
     Dispatch = cowboy_router:compile([
-        {'_', [
-            {"/api/schedule", schedule_handler, []},  
+        {'_', [      
+             {"/api/events", events_handler, []},
+             {"/api/events/:id", events_handler, []},
             {"/api/auth", auth_handler, []}
         ]}
     ]),

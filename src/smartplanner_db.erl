@@ -11,9 +11,11 @@
     list_users/0
 ]).
 
+-export([save_token/2, get_user_id_by_token/1]).
+
 
 -include("user.hrl").
-
+-include("event.hrl").
 
 
 %%%===================================================================
@@ -29,7 +31,15 @@ init() ->
         {disc_copies, [node()]},
         {index, [#user.mail]}
 
-    ]).
+    ]),
+    mnesia:create_table(event, [
+    {attributes, record_info(fields, event)},
+    {disc_copies, [node()]}
+     ]),
+    mnesia:create_table(token, [
+    {attributes, [token, user_id]},
+    {disc_copies, [node()]}
+   ]).
 
 stop() ->
     mnesia:stop().
@@ -43,7 +53,9 @@ add_user(Mail, Password, Name) ->
         case mnesia:index_read(user, Mail, #user.mail) of
             [] ->
                 Id = erlang:unique_integer([monotonic, positive]),
-                mnesia:write(#user{id=Id, mail = Mail, password = Password, name = Name}),
+              
+                PasswordHash = password:hash(Password),
+                mnesia:write(#user{id=Id, mail = Mail, password = PasswordHash,  name = Name}),
                 ok;
             _ ->
                 {error, user_exists}
@@ -87,3 +99,23 @@ list_users() ->
         mnesia:match_object(#user{mail = '_', password = '_', name = '_'})
     end,
     mnesia:transaction(F).
+
+
+%%%===================================================================
+%%% Token
+%%%===================================================================
+
+
+save_token(Token, UserId) ->
+    F = fun() -> mnesia:write({token, Token, UserId}) end,
+    mnesia:transaction(F).
+
+get_user_id_by_token(Token) ->
+    F = fun() ->
+        case mnesia:read(token, Token) of
+            [{token, _, UserId}] -> {ok, UserId};
+            [] -> {error, not_found}
+        end
+    end,
+    {atomic, Result} = mnesia:transaction(F),
+    Result.

@@ -8,7 +8,8 @@
         stdlib,
         mnesia,
         ranch,
-        cowboy
+        cowboy,
+        crypto
     ]},
     {env, []},
     {modules, []},
