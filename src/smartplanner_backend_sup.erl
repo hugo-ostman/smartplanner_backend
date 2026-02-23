@@ -19,7 +19,8 @@ init([]) ->
         {'_', [      
              {"/api/events", events_handler, []},
              {"/api/events/:id", events_handler, []},
-            {"/api/auth", auth_handler, []}
+             {"/api/auth", auth_handler, []},
+             {"/api/ai/chat", ai_handler, []}
         ]}
     ]),
       CowboyChild = #{
