@@ -20,8 +20,10 @@ init([]) ->
              {"/api/events", events_handler, []},
              {"/api/events/:id", events_handler, []},
              {"/api/auth", auth_handler, []},
-             {"/api/ai/chat", ai_handler, []}
+             {"/api/ai/chat", ai_handler, []},
+             {"/api/settings", settings_handler, []}
         ]}
+        %%% lägg till fler routes här ovanför som settings_handler
     ]),
       CowboyChild = #{
         id => cowboy_http,
